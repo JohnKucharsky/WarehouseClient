@@ -1,9 +1,8 @@
 import { Dialog, IconButton, TableCell } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CellSort from "./CellSort";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import CreateDialog from "src/features/products/CreateDialog.tsx";
+import CreateDialog from "src/features/addresses/CreateDialog.tsx";
 
 export default function TableHeadEl() {
   const { t } = useTranslation();
@@ -15,11 +14,12 @@ export default function TableHeadEl() {
         <CreateDialog handleClose={() => setCreateOpen(false)} />
       </Dialog>
 
-      <TableCell>{t("Picture")}</TableCell>
-      <CellSort label={t("Name")} value="name" />
-      <TableCell>{t("Model")}</TableCell>
-      <TableCell>{t("Price")}</TableCell>
-      <CellSort label={t("Serial")} value="serial" />
+      <TableCell>{t("City")}</TableCell>
+      <TableCell>{t("Street")}</TableCell>
+      <TableCell>{t("House")}</TableCell>
+      <TableCell>{t("Floor")}</TableCell>
+      <TableCell>{t("Entrance")}</TableCell>
+      <TableCell>{t("additionalInfo")}</TableCell>
       <TableCell>
         <IconButton onClick={() => setCreateOpen(true)}>
           <AddIcon />

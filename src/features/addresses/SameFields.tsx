@@ -17,11 +17,12 @@ export const SameFields = ({
   edit,
 }: {
   formikProps: FormikProps<{
-    name: string;
-    serial: string;
-    price: string;
-    model: string;
-    picture_url: string;
+    city: string;
+    street: string;
+    house: string;
+    floor: string;
+    entrance: string;
+    additionalInfo: string;
     submit: unknown;
   }>;
   edit?: boolean;
@@ -39,61 +40,72 @@ export const SameFields = ({
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <OutlinedInputEl
-              touched={touched.name}
-              error={errors.name}
-              label={t("Name")}
-              name={"name"}
+              touched={touched.city}
+              error={errors.city}
+              label={t("City")}
+              name={"city"}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={values.name}
+              value={values.city}
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <OutlinedInputEl
-              touched={touched.serial}
-              error={errors.serial}
-              label={t("Serial")}
-              name={"serial"}
+              touched={touched.street}
+              error={errors.street}
+              label={t("Street")}
+              name={"street"}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={values.serial}
+              value={values.street}
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <OutlinedInputEl
-              touched={touched.price}
-              error={errors.price}
-              label={t("Price")}
-              name={"price"}
+              touched={touched.house}
+              error={errors.house}
+              label={t("House")}
+              name={"house"}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={values.price}
+              value={values.house}
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <OutlinedInputEl
-              touched={touched.picture_url}
-              error={errors.picture_url}
-              label={t("Picture")}
-              name={"picture_url"}
+              touched={touched.floor}
+              error={errors.floor}
+              label={t("Floor")}
+              name={"floor"}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={values.picture_url}
+              value={values.floor}
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <OutlinedInputEl
-              touched={touched.model}
-              error={errors.model}
-              label={t("Model")}
-              name={"model"}
+              touched={touched.entrance}
+              error={errors.entrance}
+              label={t("Entrance")}
+              name={"entrance"}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={values.model}
+              value={values.entrance}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <OutlinedInputEl
+              touched={touched.additionalInfo}
+              error={errors.additionalInfo}
+              label={t("additionalInfo")}
+              name={"additionalInfo"}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={values.additionalInfo}
             />
           </Grid>
         </Grid>

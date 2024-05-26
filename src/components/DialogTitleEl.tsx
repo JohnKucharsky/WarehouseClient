@@ -11,7 +11,8 @@ export default function DialogTitleEl({
   return (
     <DialogTitle
       sx={{
-        p: 3,
+        pt: 2,
+        pb: 0,
       }}
     >
       <IconButton

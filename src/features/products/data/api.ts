@@ -20,13 +20,13 @@ export const getProductsFx = createEffect<
     sort_order?: string;
   },
   PaginatedProducts
->(async ({ page, limit = 100, order_by, sort_order }) => {
+>(async ({ page, limit = 20, order_by, sort_order }) => {
   const res = await axiosInstance.get<PaginatedProducts>(
     apiRoutesEnum.product,
     {
       params: {
         offset: page ? Number(page) * Number(limit) : undefined,
-        limit: limit || undefined,
+        limit: limit ?? undefined,
         order_by: order_by ?? undefined,
         sort_order: sort_order ?? undefined,
       },
@@ -38,49 +38,54 @@ export const getProductsFx = createEffect<
   } catch (e) {
     consola.error(apiRoutesEnum.product, e);
   }
-  console.log(res.data);
+
   return res.data;
 });
 
 export const productStarted = createEvent();
 
 export const addProductFx = createEffect<EditProduct, Product>(async (data) => {
-  const res = await axiosInstance.post<EditProduct, AxiosResponse<Product>>(
-    apiRoutesEnum.product,
-    { ...data },
-  );
-  return res.data;
+  const res = await axiosInstance.post<
+    EditProduct,
+    AxiosResponse<{ data: Product }>
+  >(apiRoutesEnum.product, { ...data });
+
+  return res.data.data;
 });
 
 export const editProductFx = createEffect<
   { data: EditProduct; id: number },
   Product
 >(async (data) => {
-  const res = await axiosInstance.put<EditProduct, AxiosResponse<Product>>(
-    apiRoutesEnum.product + "/" + data.id,
-    {
-      ...data.data,
-    },
-  );
-  return res.data;
+  const res = await axiosInstance.put<
+    EditProduct,
+    AxiosResponse<{ data: Product }>
+  >(apiRoutesEnum.product + "/" + data.id, {
+    ...data.data,
+  });
+
+  return res.data.data;
 });
 
 export const deleteProductFx = createEffect<number, Product>(async (id) => {
-  const res = await axiosInstance.delete<unknown, AxiosResponse<Product>>(
-    apiRoutesEnum.product + "/" + id,
-  );
-  return res.data;
+  const res = await axiosInstance.delete<
+    unknown,
+    AxiosResponse<{ data: Product }>
+  >(apiRoutesEnum.product + "/" + id);
+
+  return res.data.data;
 });
 
 $products
   .on(getProductsFx.doneData, (_, payload) => payload)
   .on(addProductFx.doneData, (state, payload) => {
     if (!state) return null;
+    console.log(state, payload);
     return {
       data: [payload, ...state.data],
       pagination: {
         ...state.pagination,
-        total_count: state.pagination.total + 1,
+        total: state.pagination.total + 1,
       },
     };
   })
@@ -99,7 +104,7 @@ $products
       data: state.data.filter((product) => product.id !== payload.id),
       pagination: {
         ...state.pagination,
-        total_count: state.pagination.total - 1,
+        total: state.pagination.total - 1,
       },
     };
   });

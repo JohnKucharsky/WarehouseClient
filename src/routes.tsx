@@ -9,12 +9,14 @@ import Order from "./features/order/Order.tsx";
 import AssemblyInfo from "./features/assemblyInfo/AssemblyInfo.tsx";
 import { paths } from "src/utils/common.ts";
 import PageTitle from "src/components/PageTitle.tsx";
+import { redirect } from "react-router";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
+      { index: true, loader: () => redirect("/products") },
       {
         path: paths.products,
         element: (

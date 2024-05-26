@@ -38,7 +38,7 @@ export default function Products() {
           {products?.data.length === 0 ? (
             <TableEmptyText
               colSpan={8}
-              title={t("couldNotFindSearchedProducts")}
+              title={t("couldNotFindSearchedItems")}
             />
           ) : null}
 

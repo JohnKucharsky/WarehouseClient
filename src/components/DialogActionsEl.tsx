@@ -1,17 +1,15 @@
 import { Button, DialogActions, FormHelperText } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import { useTranslation } from "react-i18next";
-import AddIcon from "@mui/icons-material/Add";
 
 export default function DialogActionsEl({
   submit,
-  edit,
+  title,
+  saveIcon,
 }: {
   submit: string | null | undefined;
-  edit?: boolean;
+  title: string;
+  saveIcon?: boolean;
 }) {
-  const { t } = useTranslation();
-
   return (
     <DialogActions
       sx={{
@@ -26,11 +24,11 @@ export default function DialogActionsEl({
       ) : null}
       <Button
         type="submit"
-        startIcon={edit ? <SaveIcon /> : <AddIcon />}
+        startIcon={saveIcon ? <SaveIcon /> : null}
         disabled={Boolean(submit)}
         variant="contained"
       >
-        {edit ? t("Save") : t("Create")}
+        {title}
       </Button>
     </DialogActions>
   );

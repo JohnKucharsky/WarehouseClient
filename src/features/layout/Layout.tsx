@@ -10,7 +10,7 @@ import {
 import { useMemo } from "react";
 import { useUnit } from "effector-react";
 import { $colorMode } from "src/features/layout/store.ts";
-import TopLine from "src/components/TopLine.tsx";
+import Header from "src/features/header/Header.tsx";
 import { ruRU, enUS } from "@mui/material/locale";
 
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ export default function Layout() {
       <CssBaseline />
       <MainWrapper>
         <Box px={{ xs: 1, md: 2 }} pt={1} maxWidth={"100rem"} mx={"auto"}>
-          <TopLine />
+          <Header />
         </Box>
         <Box p={{ xs: 1, md: 2 }} maxWidth={"100rem"} mx={"auto"}>
           <Outlet />

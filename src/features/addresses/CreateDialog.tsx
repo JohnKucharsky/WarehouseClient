@@ -1,19 +1,20 @@
 import { Formik } from "formik";
 
-import { yupSchemaProduct } from "src/features/products/data/service.ts";
 import Title from "src/components/DialogTitleEl.tsx";
 import { useTranslation } from "react-i18next";
 import { AxiosErrorType, getErrorMessage } from "src/utils/axios.ts";
-import { SameFields } from "src/features/products/SameFields.tsx";
+import { SameFields } from "src/features/addresses/SameFields.tsx";
 import { useUnit } from "effector-react";
-import { addProductFx } from "src/features/products/data/api.ts";
+import { addAddressFx } from "src/features/addresses/data/api.ts";
+import { yupSchemaAddress } from "src/features/addresses/data/service.ts";
 
 const emptyInitialValues = {
-  name: "",
-  serial: "",
-  price: "",
-  model: "",
-  picture_url: "",
+  city: "",
+  street: "",
+  house: "",
+  floor: "",
+  entrance: "",
+  additionalInfo: "",
   submit: null as unknown,
 };
 
@@ -22,7 +23,7 @@ export default function CreateDialog({
 }: {
   handleClose: () => void;
 }) {
-  const [createProduct] = useUnit([addProductFx]);
+  const [createAddress] = useUnit([addAddressFx]);
   const { t } = useTranslation();
 
   return (
@@ -30,15 +31,18 @@ export default function CreateDialog({
       <Title handleClose={handleClose} title={t("Create")} />
       <Formik
         initialValues={emptyInitialValues}
-        validationSchema={yupSchemaProduct}
+        validationSchema={yupSchemaAddress}
         onSubmit={async (values, { resetForm, setErrors }) => {
           try {
-            await createProduct({
-              name: values.name,
-              serial: values.serial,
-              price: Number(values.price),
-              picture_url: values.picture_url,
-              model: values.model ? values.model : undefined,
+            await createAddress({
+              city: values.city,
+              street: values.street,
+              house: values.house,
+              floor: values.floor ? Number(values.floor) : undefined,
+              entrance: values.entrance ? Number(values.entrance) : undefined,
+              additional_info: values.additionalInfo
+                ? values.additionalInfo
+                : undefined,
             });
             handleClose();
 

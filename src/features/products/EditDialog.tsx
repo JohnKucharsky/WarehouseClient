@@ -18,7 +18,7 @@ export default function EditDialog({
 
   return (
     <>
-      <DialogTitleEl handleClose={handleClose} title={t("editProduct")} />
+      <DialogTitleEl handleClose={handleClose} title={t("Edit")} />
       <Formik
         initialValues={{
           name: initialValues.name,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TimeStampsAndIdZod } from "../../../utils/common.ts";
+import { TimeStampsAndIdZod } from "src/utils/common.ts";
 
 const ProductZod = z
   .object({

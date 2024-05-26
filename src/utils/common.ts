@@ -33,3 +33,5 @@ export const TimeStampsAndIdZod = z.object({
 
 export const POSITIVE_NUMBER_REGEX =
   /^(?!^[-+]?[0.]+(?:[Ee]|$))(?!^-)[+-]?(?=[0123456789.])(?:[0123456789]+(?:[.][0123456789]*)?|[.][0123456789]+)(?:[Ee][+-]?[0123456789]+|)$/;
+
+export const MINUTE = 60000;

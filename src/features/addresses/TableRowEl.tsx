@@ -1,29 +1,21 @@
-import {
-  Box,
-  Dialog,
-  IconButton,
-  Stack,
-  TableCell,
-  TableRow,
-} from "@mui/material";
-import { Product } from "src/features/products/data/types.ts";
+import { Dialog, IconButton, Stack, TableCell, TableRow } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useState } from "react";
 import ConfirmDelete from "src/components/ConfirmDelete.tsx";
-import EditDialog from "src/features/products/EditDialog.tsx";
+import EditDialog from "src/features/addresses/EditDialog.tsx";
 import { useUnit } from "effector-react";
-import { deleteProductFx } from "src/features/products/data/api.ts";
-import { NumericFormat } from "react-number-format";
+import { Address } from "src/features/addresses/data/types.ts";
+import { deleteAddressFx } from "src/features/addresses/data/api.ts";
 
-export default function TableRowEl({ product }: { product: Product }) {
+export default function TableRowEl({ address }: { address: Address }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const [deleteProduct] = useUnit([deleteProductFx]);
+  const [deleteAddress] = useUnit([deleteAddressFx]);
 
   const handleDelete = () => {
-    deleteProduct(product.id).finally(() => setOpenDelete(false));
+    deleteAddress(address.id).finally(() => setOpenDelete(false));
   };
 
   return (
@@ -31,7 +23,7 @@ export default function TableRowEl({ product }: { product: Product }) {
       <Dialog onClose={() => setOpenEdit(false)} open={openEdit}>
         <EditDialog
           handleClose={() => setOpenEdit(false)}
-          initialValues={product}
+          initialValues={address}
         />
       </Dialog>
       <Dialog
@@ -45,28 +37,12 @@ export default function TableRowEl({ product }: { product: Product }) {
         />
       </Dialog>
       <TableRow>
-        <TableCell>
-          <Box
-            component="img"
-            sx={{
-              height: 30,
-              width: 30,
-            }}
-            alt="Product img."
-            src={product.picture_url}
-          />
-        </TableCell>
-        <TableCell>{product.name}</TableCell>
-        <TableCell>{product.model ?? ""}</TableCell>
-        <TableCell>
-          <NumericFormat
-            displayType="text"
-            defaultValue={"-"}
-            value={product.price}
-            thousandSeparator={" "}
-          />
-        </TableCell>
-        <TableCell>{product.serial}</TableCell>
+        <TableCell>{address.city}</TableCell>
+        <TableCell>{address.street}</TableCell>
+        <TableCell>{address.house}</TableCell>
+        <TableCell>{address.floor ?? ""}</TableCell>
+        <TableCell>{address.entrance ?? ""}</TableCell>
+        <TableCell>{address.additional_info ?? ""}</TableCell>
         <TableCell>
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <IconButton onClick={() => setOpenEdit(true)}>
