@@ -37,4 +37,6 @@ export const ru = {
   Floor: "Этаж",
   Entrance: "Подъезд",
   additionalInfo: "Доп. информация",
+  Payment: "Способ оплаты",
+  CreatedAt: "Создан",
 } as const;

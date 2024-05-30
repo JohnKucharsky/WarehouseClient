@@ -36,4 +36,5 @@ export const en = {
   Floor: "Floor",
   Entrance: "Entrance",
   additionalInfo: "Additional Info",
+  Payment: "Payment",
 } as const;

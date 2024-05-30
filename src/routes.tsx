@@ -5,11 +5,12 @@ import Addresses from "./features/addresses/Addresses.tsx";
 import Shelves from "./features/shelves/Shelves.tsx";
 import Shelf from "./features/shelf/Shelf.tsx";
 import Orders from "./features/orders/Orders.tsx";
-import Order from "./features/order/Order.tsx";
+
 import AssemblyInfo from "./features/assemblyInfo/AssemblyInfo.tsx";
 import { paths } from "src/utils/common.ts";
 import PageTitle from "src/components/PageTitle.tsx";
 import { redirect } from "react-router";
+import { Box } from "@mui/material";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ export const router = createBrowserRouter([
         path: `${paths.order}/:order_id`,
         element: (
           <PageTitle title={paths.order}>
-            <Order />
+            <Box />
           </PageTitle>
         ),
       },
