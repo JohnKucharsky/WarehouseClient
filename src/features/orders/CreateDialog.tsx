@@ -3,18 +3,20 @@ import { Formik } from "formik";
 import Title from "src/components/DialogTitleEl.tsx";
 import { useTranslation } from "react-i18next";
 import { AxiosErrorType, getErrorMessage } from "src/utils/axios.ts";
-import { SameFields } from "src/features/addresses/SameFields.tsx";
+import { SameFields } from "src/features/orders/SameFields.tsx";
 import { useUnit } from "effector-react";
-import { addAddressFx } from "src/features/addresses/data/api.ts";
-import { yupSchemaAddress } from "src/features/addresses/data/service.ts";
+import { yupSchemaOrders } from "src/features/orders/data/service.ts";
+import { addOrderFx } from "src/features/orders/data/api.ts";
+import { useEffect } from "react";
+import { addressesStarted } from "src/features/addresses/data/api.ts";
 
 const emptyInitialValues = {
-  city: "",
-  street: "",
-  house: "",
-  floor: "",
-  entrance: "",
-  additionalInfo: "",
+  addressId: "",
+  payment: "card",
+  products: [{ productId: "", quantity: "1" }] as {
+    productId: string;
+    quantity: string;
+  }[],
   submit: null as unknown,
 };
 
@@ -23,26 +25,29 @@ export default function CreateDialog({
 }: {
   handleClose: () => void;
 }) {
-  const [createAddress] = useUnit([addAddressFx]);
+  const [createOrder] = useUnit([addOrderFx]);
+  const [getAddresses] = useUnit([addressesStarted]);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    getAddresses();
+  }, [getAddresses]);
 
   return (
     <>
       <Title handleClose={handleClose} title={t("Create")} />
       <Formik
         initialValues={emptyInitialValues}
-        validationSchema={yupSchemaAddress}
+        validationSchema={yupSchemaOrders}
         onSubmit={async (values, { resetForm, setErrors }) => {
           try {
-            await createAddress({
-              city: values.city,
-              street: values.street,
-              house: values.house,
-              floor: values.floor ? Number(values.floor) : undefined,
-              entrance: values.entrance ? Number(values.entrance) : undefined,
-              additional_info: values.additionalInfo
-                ? values.additionalInfo
-                : undefined,
+            await createOrder({
+              address_id: Number(values.addressId),
+              payment: values.payment,
+              products: values.products.map((v) => ({
+                product_id: Number(v.productId),
+                quantity: Number(v.quantity),
+              })),
             });
             handleClose();
 

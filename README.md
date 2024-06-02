@@ -7,14 +7,9 @@
 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)
 
 
-## Build the app
+## Start the app
 ```
-yarn build
-```
-
-## Run the app
-```
-yarn preview
+yarn start
 ```
 
 ## For dev

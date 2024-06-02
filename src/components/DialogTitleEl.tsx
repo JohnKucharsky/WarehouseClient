@@ -5,7 +5,7 @@ export default function DialogTitleEl({
   handleClose,
   title,
 }: {
-  handleClose: () => void;
+  handleClose?: () => void;
   title: string;
 }) {
   return (
@@ -13,20 +13,23 @@ export default function DialogTitleEl({
       sx={{
         pt: 2,
         pb: 0,
+        width: "100%",
       }}
     >
-      <IconButton
-        sx={{
-          position: "absolute",
-          top: "0.5rem",
-          right: "0.5rem",
-        }}
-        onClick={handleClose}
-        size="small"
-        color={"primary"}
-      >
-        <CloseIcon />
-      </IconButton>
+      {handleClose ? (
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: "0.5rem",
+            right: "0.5rem",
+          }}
+          onClick={handleClose}
+          size="small"
+          color={"primary"}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
       <Typography fontSize={"1.5rem"} gutterBottom>
         {title}
       </Typography>

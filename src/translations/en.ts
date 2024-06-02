@@ -37,4 +37,12 @@ export const en = {
   Entrance: "Entrance",
   additionalInfo: "Additional Info",
   Payment: "Payment",
+  CreatedAt: "Created at",
+  Address: "Address",
+  cash: "Cash",
+  card: "Card",
+  Product: "Product",
+  Quantity: "Quantity",
+  Remove: "Remove",
+  loadMore: "Load more",
 } as const;

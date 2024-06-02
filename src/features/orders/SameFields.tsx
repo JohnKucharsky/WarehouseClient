@@ -1,113 +1,150 @@
-import { DialogContent, Grid } from "@mui/material";
+import {
+  Box,
+  DialogContent,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 
-import { FormikProps } from "formik";
-import OutlinedInputEl from "src/components/OutlinedInputEl.tsx";
+import { FormikErrors, FormikProps } from "formik";
 import { useTranslation } from "react-i18next";
 import DialogActionsEl from "src/components/DialogActionsEl.tsx";
+import { Fragment } from "react";
+
+import AddressesInput from "src/features/orders/AddressesInput.tsx";
+import ProductsInput from "src/features/orders/ProductsInput.tsx";
 
 export const SameFields = ({
   formikProps: {
     errors,
     handleBlur,
-    handleChange,
     handleSubmit,
     touched,
     values,
+    setFieldValue,
   },
   edit,
 }: {
   formikProps: FormikProps<{
-    city: string;
-    street: string;
-    house: string;
-    floor: string;
-    entrance: string;
-    additionalInfo: string;
+    addressId: string;
+    payment: string;
+    products: { productId: string; quantity: string }[];
     submit: unknown;
   }>;
   edit?: boolean;
 }) => {
   const { t } = useTranslation();
 
+  const handleChangeQty = (value: string, productIdx: number) => {
+    if (value === "Remove") {
+      setFieldValue(
+        "products",
+        values.products.filter((_, idx) => idx !== productIdx),
+      );
+      return;
+    }
+    setFieldValue(`products.${productIdx}.quantity`, value);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <Box component={"form"} onSubmit={handleSubmit}>
       <DialogContent
         sx={{
           px: { xs: 1, md: 2 },
           py: 2,
         }}
       >
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.city}
-              error={errors.city}
-              label={t("City")}
-              name={"city"}
-              handleChange={handleChange}
+        <Grid container rowSpacing={3} columnSpacing={1.5}>
+          <Grid item xs={12}>
+            <AddressesInput
+              setFieldValue={setFieldValue}
+              touched={Boolean(touched?.addressId)}
+              error={errors.addressId}
               handleBlur={handleBlur}
-              value={values.city}
-              required
             />
           </Grid>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.street}
-              error={errors.street}
-              label={t("Street")}
-              name={"street"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={values.street}
-              required
-            />
+          <Grid item xs={12}>
+            <FormControl required fullWidth variant="outlined">
+              <InputLabel>{t("Payment")}</InputLabel>
+              <Select
+                variant={"outlined"}
+                value={values.payment}
+                onChange={(e) => setFieldValue("payment", e.target.value)}
+                label={t("Payment")}
+              >
+                {["cash", "card"].map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {t(item)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.house}
-              error={errors.house}
-              label={t("House")}
-              name={"house"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={values.house}
-              required
-            />
+          <Grid item xs={12}>
+            <Stack pl={2} alignItems={"center"} direction={"row"} spacing={1}>
+              <Typography variant={"h6"}>{t("Products")}</Typography>
+              <Tooltip title={t("addProduct")}>
+                <IconButton
+                  onClick={() =>
+                    setFieldValue("products", [
+                      ...values.products,
+                      { productId: "", quantity: "1" },
+                    ])
+                  }
+                  sx={{ height: "2rem", width: "2rem" }}
+                >
+                  +
+                </IconButton>
+              </Tooltip>
+            </Stack>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.floor}
-              error={errors.floor}
-              label={t("Floor")}
-              name={"floor"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={values.floor}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.entrance}
-              error={errors.entrance}
-              label={t("Entrance")}
-              name={"entrance"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={values.entrance}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <OutlinedInputEl
-              touched={touched.additionalInfo}
-              error={errors.additionalInfo}
-              label={t("additionalInfo")}
-              name={"additionalInfo"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={values.additionalInfo}
-            />
-          </Grid>
+          {values.products.map((product, index) => (
+            <Fragment key={index}>
+              <Grid item xs={10}>
+                <ProductsInput
+                  handleBlur={handleBlur}
+                  touched={Boolean(touched?.products?.[index]?.productId)}
+                  setFieldValue={setFieldValue}
+                  name={`products.${index}.productId`}
+                  error={
+                    (
+                      errors?.products?.[index] as FormikErrors<{
+                        productId: string;
+                        quantity: string;
+                      }>
+                    )?.productId
+                  }
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <FormControl required fullWidth variant="outlined">
+                  <InputLabel>{t("Quantity")}</InputLabel>
+                  <Select
+                    variant={"outlined"}
+                    value={product.quantity}
+                    onChange={(e) => handleChangeQty(e.target.value, index)}
+                    label={t("Quantity")}
+                  >
+                    {["Remove", "1", "2", "3", "4", "5"].map((item) => {
+                      if (values.products.length === 1 && item === "Remove")
+                        return null;
+                      return (
+                        <MenuItem key={item} value={item}>
+                          {t(item)}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Fragment>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActionsEl
@@ -115,6 +152,6 @@ export const SameFields = ({
         title={edit ? t("Save") : t("Create")}
         submit={errors.submit}
       />
-    </form>
+    </Box>
   );
 };

@@ -30,7 +30,9 @@ export default function Layout() {
   const theme = useMemo(() => {
     const possibleLocales = { ruRU, enUS };
     return createTheme(
-      { palette: { mode } },
+      {
+        palette: { mode },
+      },
       possibleLocales[i18n.language as "ruRU" | "enUS"],
     );
   }, [i18n.language, mode]);

@@ -1,6 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { consola } from "consola";
-import { refreshToken } from "src/features/auth/data/service.ts";
+import { getCookieValue } from "src/utils/getCookie.ts";
+import { apiRoutesEnum, MINUTE } from "src/utils/common.ts";
+import { getMeFx } from "src/features/auth/data/api.ts";
 
 export type AxiosErrorType = AxiosError<{
   message: string;
@@ -12,11 +14,59 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    refreshToken();
+    if (!getCookieValue("logged_in")) {
+      const localStorageRefreshTime =
+        window.localStorage.getItem("refresh_time");
+      if (localStorageRefreshTime !== null) {
+        const now = new Date().getTime();
+        const refresh_time = Number(localStorageRefreshTime);
+
+        if (refresh_time + MINUTE < now) {
+          axiosInstance
+            .get(apiRoutesEnum.refresh)
+            .then(() => {
+              window.localStorage.setItem(
+                "refresh_time",
+                String(new Date().getTime()),
+              );
+              getMeFx({});
+            })
+            .catch((err) => {
+              window.localStorage.removeItem("refresh_time");
+              consola.error(getErrorMessage(err as AxiosErrorType));
+            });
+        }
+      }
+    }
     return response;
   },
   async (error) => {
-    refreshToken();
+    const originalRequest = error.config;
+    if (!getCookieValue("logged_in")) {
+      const localStorageRefreshTime =
+        window.localStorage.getItem("refresh_time");
+      if (localStorageRefreshTime !== null) {
+        const now = new Date().getTime();
+        const refresh_time = Number(localStorageRefreshTime);
+
+        if (refresh_time + MINUTE < now) {
+          axiosInstance
+            .get(apiRoutesEnum.refresh)
+            .then(() => {
+              window.localStorage.setItem(
+                "refresh_time",
+                String(new Date().getTime()),
+              );
+              getMeFx({});
+              return axiosInstance(originalRequest);
+            })
+            .catch((err) => {
+              window.localStorage.removeItem("refresh_time");
+              consola.error(getErrorMessage(err as AxiosErrorType));
+            });
+        }
+      }
+    }
 
     consola.error({
       url: error?.response?.config?.url,
@@ -37,29 +87,3 @@ export const getErrorMessage = (err: AxiosErrorType) => {
     ""
   );
 };
-
-// axiosInstance.interceptors.response.use(
-//     (response) => {
-//       return response
-//     },
-//     async (error) => {
-//       const originalRequest = error.config;
-//
-//       // If the error is a 401 and we have a refresh token, refresh the JWT token
-//       if (error.response.status === 401 && sessionStorage.getItem("refresh_token")) {
-//         const refreshToken = JSON.parse(sessionStorage.getItem("refresh_token"));
-//
-//         let data = JSON.stringify({
-//           refresh_token: refreshToken,
-//         });
-//
-//         const access_token = await refreshTheToken(data)
-//         // Re-run the original request that was intercepted
-//         originalRequest.headers.Authorization = `Bearer ${access_token}`;
-//         return axiosInstance(originalRequest);
-//       }
-//
-//       // Return the original error if we can't handle it
-//       return Promise.reject(error);
-//     }
-// );

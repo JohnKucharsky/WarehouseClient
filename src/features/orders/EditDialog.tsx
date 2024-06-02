@@ -1,20 +1,20 @@
 import { Formik } from "formik";
 
 import { SameFields } from "./SameFields.tsx";
-import { yupSchemaAddress } from "src/features/addresses/data/service.ts";
 import { AxiosErrorType, getErrorMessage } from "src/utils/axios.ts";
 import DialogTitleEl from "src/components/DialogTitleEl.tsx";
 import { useTranslation } from "react-i18next";
 import { useUnit } from "effector-react";
-import { Order } from "src/features/orders/data/types.ts";
+import { OrderWithProducts } from "src/features/orders/data/types.ts";
 import { editOrderFx } from "src/features/orders/data/api.ts";
+import { yupSchemaOrders } from "src/features/orders/data/service.ts";
 
 export default function EditDialog({
   handleClose,
   initialValues,
 }: {
   handleClose: () => void;
-  initialValues: Order;
+  initialValues: OrderWithProducts;
 }) {
   const [editOrder] = useUnit([editOrderFx]);
   const { t } = useTranslation();
@@ -24,29 +24,27 @@ export default function EditDialog({
       <DialogTitleEl handleClose={handleClose} title={t("Edit")} />
       <Formik
         initialValues={{
-          city: initialValues.city,
-          street: initialValues.street,
-          house: initialValues.house,
-          floor: initialValues.floor ? String(initialValues.floor) : "",
-          entrance: initialValues.entrance ? String(initialValues.floor) : "",
-          additionalInfo: initialValues.additional_info ?? "",
+          addressId: String(initialValues.data.address_id),
+          payment: initialValues.data.payment,
+          products: initialValues.data.products.map((p) => ({
+            productId: String(p.product_id),
+            quantity: String(p.quantity),
+          })),
           submit: null as unknown,
         }}
-        validationSchema={yupSchemaAddress}
+        validationSchema={yupSchemaOrders}
         onSubmit={async (values, { resetForm, setErrors }) => {
           try {
             await editOrder({
               data: {
-                city: values.city,
-                street: values.street,
-                house: values.house,
-                floor: values.floor ? Number(values.floor) : undefined,
-                entrance: values.entrance ? Number(values.entrance) : undefined,
-                additional_info: values.additionalInfo
-                  ? values.additionalInfo
-                  : undefined,
+                address_id: Number(values.addressId),
+                payment: values.payment,
+                products: values.products.map((p) => ({
+                  product_id: Number(p.productId),
+                  quantity: Number(p.quantity),
+                })),
               },
-              id: initialValues.id,
+              id: initialValues.data.id,
             });
             handleClose();
 

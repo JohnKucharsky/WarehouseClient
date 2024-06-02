@@ -1,4 +1,6 @@
 import {
+  Box,
+  Card,
   Paper,
   Table,
   TableBody,
@@ -15,15 +17,30 @@ import TableEmptyText from "src/components/TableEmptyText.tsx";
 import TableRowEl from "src/features/orders/TableRowEl.tsx";
 import TableHeadEl from "src/features/orders/TableHeadEl.tsx";
 import { $orders, ordersStarted } from "src/features/orders/data/api.ts";
+import { $user, getMeFx } from "src/features/auth/data/api.ts";
+import Login from "src/features/auth/Login.tsx";
 
 export default function Orders() {
-  const [orders, pageStarted] = useUnit([$orders, ordersStarted]);
+  const [orders, pageStarted, user, userPending] = useUnit([
+    $orders,
+    ordersStarted,
+    $user,
+    getMeFx.pending,
+  ]);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     pageStarted();
   }, [pageStarted]);
+
+  if (!user && !userPending) {
+    return (
+      <Card component={Box} maxWidth={"30rem"} mx={"auto"} mt={8}>
+        <Login callFromOrders />
+      </Card>
+    );
+  }
 
   return (
     <>

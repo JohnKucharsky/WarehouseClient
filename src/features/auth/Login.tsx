@@ -9,6 +9,7 @@ import OutlinedInputEl from "src/components/OutlinedInputEl.tsx";
 import DialogActionsEl from "src/components/DialogActionsEl.tsx";
 import PasswordInputEl from "src/components/PasswordInputEl.tsx";
 import { yupSchemaSignIn } from "src/features/auth/data/service.ts";
+import { ordersStarted } from "src/features/orders/data/api.ts";
 
 const emptyInitialValues = {
   email: "",
@@ -16,8 +17,15 @@ const emptyInitialValues = {
   submit: null as unknown,
 };
 
-export default function Login({ handleClose }: { handleClose: () => void }) {
+export default function Login({
+  handleClose,
+  callFromOrders,
+}: {
+  handleClose?: () => void;
+  callFromOrders?: boolean;
+}) {
   const [signIn] = useUnit([signInFx]);
+  const [fetchOrders] = useUnit([ordersStarted]);
 
   const { t } = useTranslation();
 
@@ -33,7 +41,10 @@ export default function Login({ handleClose }: { handleClose: () => void }) {
               email: values.email,
               password: values.password,
             });
-            handleClose();
+            handleClose?.();
+            if (callFromOrders) {
+              fetchOrders();
+            }
 
             resetForm();
           } catch (err) {

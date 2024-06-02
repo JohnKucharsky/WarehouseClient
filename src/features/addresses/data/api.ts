@@ -1,4 +1,10 @@
-import { createEffect, createEvent, createStore, sample } from "effector";
+import {
+  createEffect,
+  createEvent,
+  createStore,
+  merge,
+  sample,
+} from "effector";
 
 import { axiosInstance } from "src/utils/axios.ts";
 import { apiRoutesEnum } from "src/utils/common.ts";
@@ -10,20 +16,25 @@ import {
   AddressDataZod,
   EditAddress,
 } from "src/features/addresses/data/types.ts";
+import { debounce } from "patronum";
 
 export const $addresses = createStore<AddressData | null>(null);
 
-export const getAddressesFx = createEffect<unknown, AddressData>(async () => {
-  const res = await axiosInstance.get<AddressData>(apiRoutesEnum.address, {});
+export const getAddressesFx = createEffect<{ query?: string }, AddressData>(
+  async ({ query }) => {
+    const res = await axiosInstance.get<AddressData>(apiRoutesEnum.address, {
+      params: { query },
+    });
 
-  try {
-    AddressDataZod.parse(res.data);
-  } catch (e) {
-    consola.error(apiRoutesEnum.address, e);
-  }
+    try {
+      AddressDataZod.parse(res.data);
+    } catch (e) {
+      consola.error(apiRoutesEnum.address, e);
+    }
 
-  return res.data;
-});
+    return res.data;
+  },
+);
 
 export const addAddressFx = createEffect<EditAddress, { data: Address }>(
   async (data) => {
@@ -63,8 +74,22 @@ export const deleteAddressFx = createEffect<number, { data: Address }>(
 
 export const addressesStarted = createEvent();
 
+export const $query = createStore("");
+export const handleChangeQueryEv = createEvent<string>();
+$query.on(handleChangeQueryEv, (_, payload) => payload);
+
 sample({
-  clock: addressesStarted,
+  clock: merge([addressesStarted]),
+  fn: () => ({}),
+  target: getAddressesFx,
+});
+
+sample({
+  clock: merge([debounce(handleChangeQueryEv, 300)]),
+  source: {
+    query: $query,
+  },
+  fn: (params) => params,
   target: getAddressesFx,
 });
 

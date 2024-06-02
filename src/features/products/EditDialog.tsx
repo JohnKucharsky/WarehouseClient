@@ -31,12 +31,6 @@ export default function EditDialog({
         validationSchema={yupSchemaProduct}
         onSubmit={async (values, { resetForm, setErrors }) => {
           console.log(values);
-          // const valuesToSend = {
-          //   fullname: values.fullname,
-          //   birthday: dayjs(values.birthday).format("YYYY-MM-DD"),
-          //   gender: Number(values.gender),
-          // };
-
           try {
             // request here
             handleClose();

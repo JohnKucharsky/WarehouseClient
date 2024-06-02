@@ -18,17 +18,17 @@ export const getProductsFx = createEffect<
     limit?: number;
     order_by?: string;
     sort_order?: string;
+    query?: string;
   },
   PaginatedProducts
->(async ({ page, limit = 20, order_by, sort_order }) => {
+>(async ({ page, limit = 20, ...rest }) => {
   const res = await axiosInstance.get<PaginatedProducts>(
     apiRoutesEnum.product,
     {
       params: {
         offset: page ? Number(page) * Number(limit) : undefined,
         limit: limit ?? undefined,
-        order_by: order_by ?? undefined,
-        sort_order: sort_order ?? undefined,
+        ...rest,
       },
     },
   );

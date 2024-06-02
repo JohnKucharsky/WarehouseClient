@@ -7,15 +7,17 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "tsc --noEmit --incremental && npx eslint src --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "tsc && vite build && vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.15",
-    "@mui/material": "^5.15.15",
+    "@mui/material": "^5.15.19",
     "@mui/x-date-pickers": "^7.2.0",
     "@reduxjs/toolkit": "^2.2.5",
+    "@types/lodash": "^4.17.4",
     "axios": "^1.7.2",
     "consola": "^3.2.3",
     "dayjs": "^1.11.10",
@@ -24,6 +26,8 @@
     "formik": "^2.4.5",
     "i18next": "^23.11.5",
     "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "patronum": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

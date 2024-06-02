@@ -2,7 +2,7 @@ import { Dialog, IconButton, TableCell } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import CreateDialog from "src/features/addresses/CreateDialog.tsx";
+import CreateDialog from "src/features/orders/CreateDialog.tsx";
 
 export default function TableHeadEl() {
   const { t } = useTranslation();
@@ -10,7 +10,12 @@ export default function TableHeadEl() {
 
   return (
     <>
-      <Dialog onClose={() => setCreateOpen(false)} open={createOpen}>
+      <Dialog
+        maxWidth={"sm"}
+        fullWidth
+        onClose={() => setCreateOpen(false)}
+        open={createOpen}
+      >
         <CreateDialog handleClose={() => setCreateOpen(false)} />
       </Dialog>
 

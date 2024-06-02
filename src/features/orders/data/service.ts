@@ -1,13 +1,20 @@
-import { array, number, object, string } from "yup";
+import { array, object, string } from "yup";
+import { POSITIVE_NUMBER_REGEX } from "src/utils/common.ts";
 
 export const yupSchemaOrders = object().shape({
-  address_id: number().required(),
-  street: string().max(64).required(),
+  addressId: string()
+    .matches(POSITIVE_NUMBER_REGEX, "Positive number")
+    .required("Required"),
+  payment: string().oneOf(["cash", "card"]).required(),
   products: array()
     .of(
       object().shape({
-        product_id: number().required(),
-        quantity: number().required(),
+        productId: string()
+          .matches(POSITIVE_NUMBER_REGEX, "Positive number")
+          .required(),
+        quantity: string()
+          .matches(POSITIVE_NUMBER_REGEX, "Positive number")
+          .required(),
       }),
     )
     .required(),

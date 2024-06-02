@@ -39,4 +39,11 @@ export const ru = {
   additionalInfo: "Доп. информация",
   Payment: "Способ оплаты",
   CreatedAt: "Создан",
+  Address: "Адрес",
+  cash: "Наличные",
+  card: "Карта",
+  Product: "Товар",
+  Quantity: "Количество",
+  Remove: "Удалить",
+  loadMore: "Загрузить еще",
 } as const;

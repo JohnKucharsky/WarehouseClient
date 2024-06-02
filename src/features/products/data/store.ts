@@ -16,7 +16,6 @@ $limit.on(handleLimitChangeEv, (_, value) => value);
 // sorting
 const $sortOrder = createStore<"asc" | "desc">("desc");
 const $orderBy = createStore("updated_at");
-
 const handleSortEv = createEvent<string>();
 
 sample({
