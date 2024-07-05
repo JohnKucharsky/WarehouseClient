@@ -29,8 +29,7 @@ export default function EditDialog({
           submit: null as unknown,
         }}
         validationSchema={yupSchemaProduct}
-        onSubmit={async (values, { resetForm, setErrors }) => {
-          console.log(values);
+        onSubmit={async (_values, { resetForm, setErrors }) => {
           try {
             // request here
             handleClose();

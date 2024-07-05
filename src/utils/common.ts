@@ -7,12 +7,8 @@ export enum apiRoutesEnum {
   refresh = "/api/auth/refresh",
   me = "/api/auth/me",
   address = "/api/address",
-  shelf = "/api/shelf",
   product = "/api/product",
   order = "/api/order",
-  assemblyInfo = "/api/operations/assembly_info",
-  placeProducts = "/api/operations/place_products",
-  removeProducts = "/api/operations/remove_products",
 }
 
 export enum paths {
